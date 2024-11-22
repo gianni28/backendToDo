@@ -16,9 +16,14 @@ app.post('/api/register', async (req, res) => {
   try {
     // Verificar si ya existe un usuario con el mismo email
     const emailSnapshot = await db.collection('usuarios').where('email', '==', email).get();
-
     if (!emailSnapshot.empty) {
       return res.status(400).json({ message: 'El correo electrónico ya está en uso' });
+    }
+
+    // Verificar si ya existe un usuario con el mismo username
+    const usernameSnapshot = await db.collection('usuarios').where('username', '==', username).get();
+    if (!usernameSnapshot.empty) {
+      return res.status(400).json({ message: 'El nombre de usuario ya está en uso' });
     }
 
     // Registrar el usuario
@@ -29,6 +34,7 @@ app.post('/api/register', async (req, res) => {
     res.status(500).json({ message: 'Error interno del servidor' });
   }
 });
+
 
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
