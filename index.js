@@ -47,7 +47,10 @@ app.post('/api/login', async (req, res) => {
     const user = snapshot.docs[0].data();
 
     if (user.password === password) {
-      return res.status(200).json({ message: 'Inicio de sesión exitoso', email: user.email });
+      return res.status(200).json({
+        message: 'Inicio de sesión exitoso',
+        username: user.username || email.split('@')[0], // Si falta username, usa parte del email
+      });
     } else {
       return res.status(401).json({ message: 'Contraseña incorrecta' });
     }
@@ -56,6 +59,7 @@ app.post('/api/login', async (req, res) => {
     res.status(500).json({ message: 'Error interno del servidor' });
   }
 });
+
 
 
 // Iniciar servidor
